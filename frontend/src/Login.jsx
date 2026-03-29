@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   const [form, setForm] = useState({
@@ -11,12 +12,21 @@ const Login = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(form);
+    try {
+      const res = await axios.post('http://localhost:8082/loginUser', form);
 
-    // TODO: call backend API
+      if (res.data === true) {
+        alert("Login Successful ");
+      } else {
+        alert("Invalid Credentials ");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error connecting to server");
+    }
   };
 
   return (
@@ -25,33 +35,27 @@ const Login = () => {
         <h2 className="text-center mb-4">Login</h2>
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label>Email</label>
-            <input
-              type="email"
-              name="userId"
-              className="form-control"
-              placeholder="Enter email"
-              onChange={handleChange}
-            />
-          </div>
+          <input
+            type="email"
+            name="userId"
+            className="form-control mb-3"
+            placeholder="Enter email"
+            onChange={handleChange}
+          />
 
-          <div className="mb-3">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              className="form-control"
-              placeholder="Enter password"
-              onChange={handleChange}
-            />
-          </div>
+          <input
+            type="password"
+            name="password"
+            className="form-control mb-3"
+            placeholder="Enter password"
+            onChange={handleChange}
+          />
 
           <button className="btn btn-primary w-100">Login</button>
         </form>
 
         <p className="mt-3 text-center">
-          Don't have an account? <Link to="/register">Register</Link>
+          <Link to="/register">Register</Link>
         </p>
       </div>
     </div>

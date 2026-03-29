@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     email: '',
     name: '',
@@ -12,12 +15,18 @@ const Register = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(form);
+    try {
+      const res = await axios.post('http://localhost:8082/addUser', form);
 
-    // TODO: call backend API
+      alert("Registered Successfully ");
+      navigate("/"); 
+    } catch (err) {
+      console.error(err);
+      alert("Registration Failed ");
+    }
   };
 
   return (
@@ -26,44 +35,35 @@ const Register = () => {
         <h2 className="text-center mb-4">Register</h2>
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              className="form-control"
-              placeholder="Enter email"
-              onChange={handleChange}
-            />
-          </div>
+          <input
+            type="email"
+            name="email"
+            className="form-control mb-3"
+            placeholder="Enter email"
+            onChange={handleChange}
+          />
 
-          <div className="mb-3">
-            <label>Name</label>
-            <input
-              type="text"
-              name="name"
-              className="form-control"
-              placeholder="Enter name"
-              onChange={handleChange}
-            />
-          </div>
+          <input
+            type="text"
+            name="name"
+            className="form-control mb-3"
+            placeholder="Enter name"
+            onChange={handleChange}
+          />
 
-          <div className="mb-3">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              className="form-control"
-              placeholder="Enter password"
-              onChange={handleChange}
-            />
-          </div>
+          <input
+            type="password"
+            name="password"
+            className="form-control mb-3"
+            placeholder="Enter password"
+            onChange={handleChange}
+          />
 
           <button className="btn btn-success w-100">Register</button>
         </form>
 
         <p className="mt-3 text-center">
-          Already have an account? <Link to="/">Login</Link>
+          <Link to="/">Login</Link>
         </p>
       </div>
     </div>
